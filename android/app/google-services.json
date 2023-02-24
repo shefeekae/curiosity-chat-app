@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "517163437366",
+    "project_id": "curiosity-9490a",
+    "storage_bucket": "curiosity-9490a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517163437366:android:89e8652f8fb9efcd2c3797",
+        "android_client_info": {
+          "package_name": "com.shefeekae.curiosity_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517163437366-6edfnhu0darovjccq4lfstdvoi01jja2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTesykLBIfoz0_5S7z9JuTXexaOxVd8B4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517163437366-6edfnhu0darovjccq4lfstdvoi01jja2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
