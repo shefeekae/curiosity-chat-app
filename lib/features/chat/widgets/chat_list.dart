@@ -1,11 +1,9 @@
 import 'package:curiosity_app/controller/chat_controller.dart';
-import 'package:curiosity_app/controller/chat_repository.dart';
 import 'package:curiosity_app/features/chat/widgets/my_message_card.dart';
 import 'package:curiosity_app/features/chat/widgets/sender_message_card.dart';
 import 'package:curiosity_app/models/message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
 class ChatList extends StatefulWidget {
@@ -19,9 +17,8 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   final ScrollController messageController = ScrollController();
-  ChatController chatController = ChatController();
 
-  ChatRepository chat = ChatRepository();
+  ChatController chatController = ChatController();
 
   @override
   void dispose() {
@@ -32,21 +29,19 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
-      stream: chat.getChatStream(widget.recieverUserId),
+      stream: chatController.chatStream(widget.recieverUserId),
       builder: (context, snapshot) {
-        print(snapshot.data);
-
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         }
 
-        // SchedulerBinding.instance.addPostFrameCallback((_) {
-        //   messageController.jumpTo(messageController.position.maxScrollExtent);
-        // });
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No messages'));
+        }
 
         return ListView.builder(
           controller: messageController,
-          itemCount: chat.messages.length,
+          itemCount: snapshot.data?.length ?? 0,
           itemBuilder: (context, index) {
             final messageData = snapshot.data![index];
             var time = DateFormat.Hm().format(messageData.timeSent);

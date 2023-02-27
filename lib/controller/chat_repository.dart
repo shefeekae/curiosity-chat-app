@@ -9,16 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatRepository {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
 
-  void _saveDatatoUsersSubCollection(
-    UserModel senderUserData,
-    UserModel recieverUserData,
-    String text,
-    DateTime timeSent,
-    String recieverUserId,
-  ) async {
+  ChatRepository({required this.auth, required this.firestore});
+
+  void _saveDatatoUsersSubCollection({
+    required UserModel senderUserData,
+    required UserModel recieverUserData,
+    required String text,
+    required DateTime timeSent,
+    required String recieverUserId,
+  }) async {
     //users => reciever user id => chats => current user id => set data
     var recieverChatContact = ChatContact(
         name: senderUserData.name,
@@ -50,7 +52,35 @@ class ChatRepository {
         .set(senderChatContact.toMap());
   }
 
-  List<Message> messages = [];
+  Stream<List<ChatContact>> getChatContact() {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .snapshots()
+        .asyncMap((event) async {
+      List<ChatContact> contacts = [];
+      for (var document in event.docs) {
+        print(document.data());
+        var chatContact = ChatContact.fromMap(document.data());
+
+        var userData = await firestore
+            .collection('users')
+            .doc(chatContact.contactId)
+            .get();
+        var user = UserModel.fromMap(userData.data()!);
+
+        contacts.add(ChatContact(
+            name: user.name,
+            profilePic: user.profilePic,
+            contactId: chatContact.contactId,
+            timeSent: chatContact.timeSent,
+            lastMessage: chatContact.lastMessage));
+      }
+      return contacts;
+    });
+  }
+
   Stream<List<Message>> getChatStream(String recieverUserId) {
     return firestore
         .collection('users')
@@ -60,10 +90,17 @@ class ChatRepository {
         .collection('messages')
         .orderBy('timeSent')
         .snapshots()
-        .map((event) {
-      for (var document in event.docs) {
-        messages.add(Message.fromMap(document.data()));
-      }
+        .map((snapshot) {
+      List<Message> messages = [];
+
+      // for (var document in snapshot.docs) {
+      //   messages.add(Message.fromMap(document.data()));
+      // }
+
+      snapshot.docs.forEach((element) {
+        messages.add(Message.fromMap(element.data()));
+      });
+
       return messages;
     });
   }
@@ -73,8 +110,6 @@ class ChatRepository {
     required String text,
     required DateTime timeSent,
     required String messageId,
-    required String username,
-    required recieverUsername,
     required MessageEnum messageType,
   }) async {
     final message = Message(
@@ -94,7 +129,9 @@ class ChatRepository {
         .doc(recieverUserId)
         .collection('messages')
         .doc(messageId)
-        .set(message.toMap());
+        .set(
+          message.toMap(),
+        );
 
     //users => reciever id => sender id => messages => message id => store message
 
@@ -127,21 +164,20 @@ class ChatRepository {
       var messageId = const Uuid().v1();
 
       _saveDatatoUsersSubCollection(
-        senderUser,
-        recieverUserData,
-        text,
-        timeSent,
-        recieverUserId,
+        senderUserData: senderUser,
+        recieverUserData: recieverUserData,
+        text: text,
+        timeSent: timeSent,
+        recieverUserId: recieverUserId,
       );
 
       _saveMessageToMessageSubCollection(
-          recieverUserId: recieverUserId,
-          text: text,
-          timeSent: timeSent,
-          messageType: MessageEnum.text,
-          messageId: messageId,
-          recieverUsername: recieverUserData.name,
-          username: senderUser.name);
+        recieverUserId: recieverUserId,
+        text: text,
+        timeSent: timeSent,
+        messageType: MessageEnum.text,
+        messageId: messageId,
+      );
     } catch (e) {
       showSnackbar(context: context, content: e.toString());
     }

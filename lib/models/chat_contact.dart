@@ -29,6 +29,6 @@ class ChatContact {
       contactId: map['contactId'] ?? '',
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent ']),
       lastMessage: map['lastMessage'] ?? '',
-    ); // ChatContact
+    );
   }
 }

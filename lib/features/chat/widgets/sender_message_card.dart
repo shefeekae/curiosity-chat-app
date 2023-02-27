@@ -24,7 +24,7 @@ class SenderMessageCard extends StatelessWidget {
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 45),
         child: Card(
-          elevation: 1,
+          elevation: 5,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: const Color.fromRGBO(5, 96, 98, 1),
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -55,9 +55,9 @@ class SenderMessageCard extends StatelessWidget {
                 right: 10,
                 child: Text(
                   date,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
-                    color: Colors.grey[600],
+                    color: Colors.white60,
                   ),
                 ),
               )

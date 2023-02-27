@@ -23,7 +23,8 @@ class Message {
     return {
       'senderId': senderId,
       'recieverId': recieverId,
-      'text': type.type,
+      'text': text,
+      'type': type.type,
       'timeSent': timeSent.millisecondsSinceEpoch,
       'messageId': messageId,
       'isSeen': isSeen,
@@ -36,7 +37,7 @@ class Message {
         recieverId: map['recieverId'] ?? '',
         text: map['text'] ?? '',
         type: (map['type'] as String).toEnum(),
-        timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSpent']),
+        timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
         messageId: map['messageId'] ?? '',
         isSeen: map['isSeen'] ?? false);
   }
