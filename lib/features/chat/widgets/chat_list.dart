@@ -4,6 +4,7 @@ import 'package:curiosity_app/features/chat/widgets/sender_message_card.dart';
 import 'package:curiosity_app/models/message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
 class ChatList extends StatefulWidget {
@@ -38,6 +39,10 @@ class _ChatListState extends State<ChatList> {
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text('No messages'));
         }
+
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          messageController.jumpTo(messageController.position.maxScrollExtent);
+        });
 
         return ListView.builder(
           controller: messageController,

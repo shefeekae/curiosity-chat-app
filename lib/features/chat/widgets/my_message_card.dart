@@ -21,8 +21,9 @@ class MyMessageCard extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: ConstrainedBox(
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 260),
+        constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width - 45,
+            minWidth: MediaQuery.of(context).size.width - 290),
         child: Card(
           elevation: 5,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -33,10 +34,10 @@ class MyMessageCard extends StatelessWidget {
               Padding(
                 padding: type == MessageEnum.text
                     ? const EdgeInsets.only(
-                        left: 5,
-                        right: 5,
+                        left: 10,
+                        right: 10,
                         top: 5,
-                        bottom: 5,
+                        bottom: 25,
                       )
                     : const EdgeInsets.only(
                         left: 5,
@@ -47,29 +48,32 @@ class MyMessageCard extends StatelessWidget {
                 child: Column(
                   children: [
                     DisplayText(message: message),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          date,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.white60,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Icon(
-                          isSeen ? Icons.done_all : Icons.done,
-                          size: 20,
-                          color: isSeen ? Colors.blue : Colors.white60,
-                        )
-                      ],
-                    ),
                   ],
                 ),
               ),
+              Positioned(
+                bottom: 4,
+                right: 10,
+                child: Row(
+                  children: [
+                    Text(
+                      date,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.white60,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Icon(
+                      isSeen ? Icons.done_all : Icons.done,
+                      size: 20,
+                      color: isSeen ? Colors.blue : Colors.white60,
+                    )
+                  ],
+                ),
+              )
               // Positioned(
               //   bottom: 4,
               //   right: 10,
