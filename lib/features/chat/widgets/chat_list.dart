@@ -51,6 +51,13 @@ class _ChatListState extends State<ChatList> {
             final messageData = snapshot.data![index];
             var time = DateFormat.Hm().format(messageData.timeSent);
 
+            if (!messageData.isSeen &&
+                messageData.recieverId ==
+                    FirebaseAuth.instance.currentUser!.uid) {
+              chatController.setChatMessageSeen(
+                  context, widget.recieverUserId, messageData.messageId);
+            }
+
             if (messageData.senderId ==
                 FirebaseAuth.instance.currentUser!.uid) {
               return MyMessageCard(

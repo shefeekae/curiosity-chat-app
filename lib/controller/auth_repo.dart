@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:curiosity_app/controller/sign_user_up.dart';
 import 'package:flutter/material.dart';
 
